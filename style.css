@@ -1,41 +1,32 @@
 :root { --gold: #FFD700; --dark: #000; }
-body { margin: 0; background: #0a0a0a; font-family: 'Arial Black', sans-serif; overflow: hidden; }
+body { margin: 0; background: #111; font-family: 'Arial Black', sans-serif; overflow-x: hidden; }
 
-/* Trail & Fire */
-#trailCanvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; }
-.hero-section { position: relative; height: 130px; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border-bottom: 2px solid #222; }
-#fireCanvas { position: absolute; width: 100%; height: 100%; top:0; left:0; }
+/* Side Buttons */
+.side-controls { position: fixed; right: 20px; top: 55%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 2000; }
+.control-btn { background: #fff; border: 2px solid var(--gold); width: 45px; height: 45px; border-radius: 8px; cursor: pointer; font-size: 18px; }
 
-/* Header Text */
-.brand-title { position: relative; color: var(--gold); font-size: 36px; font-weight: 900; letter-spacing: 2px; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); margin: 0; }
-.share-info { position: relative; color: #aaa; font-size: 11px; font-weight: normal; margin-top: 8px; letter-spacing: 1px; font-family: sans-serif; }
+#search-panel { position: fixed; right: 80px; top: 50%; background: #fff; padding: 10px; border-radius: 5px; width: 200px; z-index: 1999; }
+.search-hidden { display: none; }
 
-/* Top Bar & Payments */
-.top-bar { background: #111; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; }
-.pay-btn { border: none; padding: 10px 18px; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 11px; }
-.binance { background: #F3BA2F; color: #000; margin-right: 10px; }
-.usdt { background: #26A17B; color: #fff; }
+/* Top Bar & Branding */
+.top-bar { background: #000; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); }
+.top-back { background: transparent; color: #fff; border: 1px solid #444; padding: 5px 10px; cursor: pointer; font-size: 12px; }
+.pay-btn { border: none; padding: 8px 15px; font-weight: bold; border-radius: 4px; font-size: 11px; cursor: pointer; }
+.binance { background: #F3BA2F; margin-right: 5px; } .usdt { background: #26A17B; color: #fff; }
+.social-links a { font-size: 18px; margin-left: 10px; }
+.fb{color:#1877f2;} .tw{color:#1da1f2;} .tg{color:#0088cc;} .yt{color:#ff0000;} .ig{color:#e1306c;}
 
-/* Social Icons - Colorful */
-.social-links a { font-size: 18px; margin-left: 15px; transition: 0.3s; }
-.fb { color: #1877F2; } .tw { color: #1DA1F2; } .tg { color: #0088cc; } .yt { color: #FF0000; } .ig { color: #C13584; }
-.social-links a:hover { transform: scale(1.3); }
+.hero-section { height: 120px; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+.brand-title { color: var(--gold); font-size: 32px; z-index: 5; margin: 0; }
+.promo-text { color: #ccc; font-size: 11px; z-index: 5; font-family: sans-serif; }
 
-/* Map Wrapper & Fixed Area */
-.map-wrapper { max-width: 95%; margin: 20px auto; border: 5px solid #333; background: #000; box-shadow: 0 0 40px rgba(0,0,0,0.8); border-radius: 8px; }
-#viewport { width: 100%; height: 620px; position: relative; overflow: hidden; cursor: grab; background: #050505; }
+/* Fixed Quad Area - White Background */
+.map-wrapper { width: 95%; max-width: 1100px; height: 600px; margin: 20px auto; border: 5px solid #333; background: #fff; position: relative; border-radius: 10px; }
+#viewport { width: 100%; height: 100%; overflow: hidden; position: relative; cursor: grab; background: #fff; }
 #mover { position: absolute; transform-origin: 0 0; }
 
-/* Controls */
-.side-controls { position: fixed; right: 20px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 2000; }
-.control-btn { background: #fff; border: none; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.nav-bar { background: #fff; padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid var(--gold); }
+.buy-now-btn { background: #cc0000; color: #fff; padding: 10px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; }
 
-/* Floating WhatsApp */
-.wa-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: #fff; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; text-decoration: none; font-weight: bold; box-shadow: 0 5px 25px rgba(0,0,0,0.4); z-index: 9999; }
-.wa-label { margin-left: 10px; font-size: 13px; font-family: sans-serif; }
-
-/* Nav Bar */
-.nav-bar { background: #fff; padding: 12px 40px; display: flex; justify-content: space-between; align-items: center; }
-.stats { color: #333; font-weight: bold; font-family: sans-serif; }
-.buy-now-btn { background: #E02020; color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: 900; animation: glow 1.5s infinite; }
-@keyframes glow { 0% {box-shadow: 0 0 5px #ff0000;} 50% {box-shadow: 0 0 25px #ff0000;} 100% {box-shadow: 0 0 5px #ff0000;} }
+.wa-float { position: fixed; bottom: 85px; right: 25px; background: #25D366; color: #fff; padding: 10px 20px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; font-weight: bold; }
+.hover-box { position: absolute; background: rgba(0,0,0,0.9); color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 12px; display: none; z-index: 3000; }
