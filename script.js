@@ -14,17 +14,17 @@ const cv = document.getElementById('mainCanvas');
 const ctx = cv.getContext('2d');
 cv.width = 5000; cv.height = 2000;
 
-let scale = 0.22, pX = 0, pY = 0, isD = false, sX, sY, pixels = {};
+let scale = 0.25, pX = 0, pY = 0, isD = false, sX, sY, pixels = {};
 const hoverBox = document.getElementById('hover-info');
 
 function render() {
-    ctx.fillStyle = "#ffffff"; // হোয়াইট কালার ব্যাকগ্রাউন্ড
+    ctx.fillStyle = "#ffffff"; 
     ctx.fillRect(0, 0, 5000, 2000);
     
-    // কালো কালার দাগ (Black Grid)
+    // কালো স্পষ্ট গ্রিড (Black Grid)
     ctx.strokeStyle = "#000000"; 
     ctx.lineWidth = 1;
-    ctx.globalAlpha = 0.2; // দাগগুলো হালকা রাখা হয়েছে যাতে লোগো বোঝা যায়
+    ctx.globalAlpha = 0.15; // দাগগুলো স্পষ্ট অথচ লোগো দেখতে সমস্যা হবে না
     for(let x=0; x<=5000; x+=20) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,2000); ctx.stroke(); }
     for(let y=0; y<=2000; y+=20) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(5000,y); ctx.stroke(); }
     ctx.globalAlpha = 1.0;
@@ -36,7 +36,7 @@ function render() {
             img.onload = () => {
                 const sz = Math.sqrt(parseInt(p.pixelCount));
                 ctx.drawImage(img, p.x, p.y, sz, sz);
-                ctx.strokeStyle = "#FFD700"; ctx.strokeRect(p.x, p.y, sz, sz);
+                ctx.strokeStyle = "#FFD700"; ctx.lineWidth = 2; ctx.strokeRect(p.x, p.y, sz, sz);
             };
         }
     });
@@ -48,6 +48,7 @@ function zoomOut() { scale = Math.max(scale / 1.3, 0.05); updateUI(); }
 function toggleSearch() { document.getElementById('search-panel').classList.toggle('search-hidden'); }
 
 const vp = document.getElementById('viewport');
+// ফিক্সড এরিয়া জুম (বক্সের ভেতরেই কাজ করবে)
 vp.addEventListener('wheel', (e) => {
     e.preventDefault();
     scale = Math.min(Math.max(0.05, scale*(e.deltaY>0?0.9:1.1)), 4);
@@ -74,4 +75,18 @@ window.onmousemove = (e) => {
     if(!found) hoverBox.style.display = 'none';
 };
 
+function searchPixel() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const res = document.getElementById('searchResult'); res.innerHTML = ""; if(!q) return;
+    Object.keys(pixels).forEach(id => {
+        if(pixels[id].name.toLowerCase().includes(q)) {
+            const d = document.createElement('div'); d.style.padding = "8px"; d.style.borderBottom = "1px solid #eee"; d.style.cursor = "pointer";
+            d.innerText = pixels[id].name; d.onclick = () => {
+                const p = pixels[id]; const sz = Math.sqrt(parseInt(p.pixelCount));
+                scale = 1.2; pX = (vp.offsetWidth/2) - (p.x + sz/2)*scale; pY = (vp.offsetHeight/2) - (p.y + sz/2)*scale; updateUI();
+            };
+            res.appendChild(d);
+        }
+    });
+}
 db.ref('pixels').on('value', s => { pixels = s.val() || {}; render(); });
