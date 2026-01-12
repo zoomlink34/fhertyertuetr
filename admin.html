@@ -1,70 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE 10 MILLION PIXELS PLUS</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<html>
+<head><title>Admin - THE 10 MILLION PIXELS PLUS</title></head>
+<body style="background:#000; color:#fff; padding:40px; font-family:sans-serif;">
+    <h2 style="color:#FFD700;">PENDING ORDERS</h2>
+    <div id="orderList">Loading orders...</div>
+    <br><br>
+    <a href="index.html" style="background:#333; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px;">← BACK TO WEBSITE</a>
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-</head>
-<body>
-
-<canvas id="trailCanvas"></canvas>
-
-<div class="side-controls">
-    <button class="control-btn" onclick="toggleSearch()"><i class="fas fa-search"></i></button>
-    <button class="control-btn" onclick="zoomIn()"><i class="fas fa-plus"></i></button>
-    <button class="control-btn" onclick="zoomOut()"><i class="fas fa-minus"></i></button>
-</div>
-
-<div id="search-panel" class="search-hidden">
-    <input type="text" id="searchInput" placeholder="Search Brand..." onkeyup="searchPixel()">
-    <div id="searchResult" class="result-box"></div>
-</div>
-
-<header class="main-header">
-    <div class="top-bar">
-        <button class="top-back" onclick="window.history.back()"><i class="fas fa-arrow-left"></i> BACK</button>
-        <div class="payment-section">
-            <button class="pay-btn binance" onclick="copy('912221034')">BINANCE ID: 912221034</button>
-            <button class="pay-btn usdt" onclick="copy('TTapBkTqrDnzHbWzek6wSBUTcJKFmR8Ws6')">USDT (TRC20)</button>
-        </div>
-        <div class="social-links">
-            <a href="#" class="fb"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="tw"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="tg"><i class="fab fa-telegram-plane"></i></a>
-            <a href="#" class="yt"><i class="fab fa-youtube"></i></a>
-            <a href="#" class="ig"><i class="fab fa-instagram"></i></a>
-        </div>
-    </div>
-    <div class="hero-section">
-        <canvas id="fireCanvas"></canvas>
-        <h1 class="brand-title">THE 10 MILLION PIXELS PLUS</h1>
-        <p class="promo-text">WhatsApp us to share your links on our 5 social platforms!</p>
-    </div>
-</header>
-
-<main class="map-wrapper">
-    <div id="viewport">
-        <div id="mover"><canvas id="mainCanvas"></canvas></div>
-        <div id="hover-info" class="hover-box"></div>
-    </div>
-</main>
-
-<div class="nav-bar">
-    <div class="stats"><span id="pixel-count-display">0</span> / 10,000,000 SOLD</div>
-    <a href="order.html" class="buy-now-btn">ADVERTISE NOW ($0.05/px)</a>
-</div>
-
-<a href="https://wa.me/8801576940717" class="wa-float" target="_blank">
-    <i class="fab fa-whatsapp"></i> <span class="wa-label">CUSTOMER SUPPORT</span>
-</a>
-
-<script src="script.js"></script>
-<script>
-    function copy(t){navigator.clipboard.writeText(t).then(()=>alert("Copied!"));}
-</script>
+    <script>
+        firebase.initializeApp({databaseURL: "https://the-10-million-pixels-plus-default-rtdb.firebaseio.com/"});
+        const db = firebase.database();
+        db.ref('pending_orders').on('value', s => {
+            const list = document.getElementById('orderList'); list.innerHTML = "";
+            const data = s.val(); if(!data) { list.innerHTML="No pending orders."; return; }
+            Object.keys(data).forEach(id => {
+                list.innerHTML += `<div style="border:1px solid #FFD700; padding:15px; margin-bottom:10px;">
+                    ${data[id].name} (${data[id].pixelCount} px) <br>
+                    <input type="text" id="img_${id}" placeholder="Image Direct URL" style="width:250px;">
+                    <button onclick="approve('${id}')">APPROVE</button>
+                </div>`;
+            });
+        });
+        function approve(id){
+            const img = document.getElementById('img_'+id).value; if(!img) return alert("Image URL missing!");
+            db.ref('pending_orders/'+id).once('value', s => {
+                let d = s.val(); d.imageUrl = img;
+                db.ref('pixels/'+id).set(d).then(()=>db.ref('pending_orders/'+id).remove());
+                alert("Order Published!");
+            });
+        }
+    </script>
 </body>
 </html>
