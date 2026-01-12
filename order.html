@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head><title>Order - THE 10 MILLION PIXELS</title>
+<style>body{text-align:center; padding:50px; background:#f4f4f4; font-family:sans-serif;} .card{border:1px solid #D4AF37; padding:30px; background:#fff; display:inline-block; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.1);}</style>
+</head>
+<body>
+    <div class="card">
+        <h2>Place Your Order</h2>
+        <p>Price: $0.05 per pixel</p>
+        <input type="number" id="amt" placeholder="Pixel Count (e.g. 10000)" style="width:250px; padding:10px;"><br><br>
+        <input type="text" id="name" placeholder="Brand Name" style="width:250px; padding:10px;"><br><br>
+        <button onclick="send()" style="padding:12px 30px; cursor:pointer; background:#cc0000; color:#fff; border:none; font-weight:bold; border-radius:5px;">SUBMIT ORDER</button>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script>
+        firebase.initializeApp({databaseURL: "https://the-10-million-pixels-plus-default-rtdb.firebaseio.com/"});
+        function send(){
+            const id = "ORD" + Date.now();
+            const val = document.getElementById('amt').value;
+            const nm = document.getElementById('name').value;
+            if(!val || !nm) return alert("Please fill all fields!");
+            firebase.database().ref('pending_orders/'+id).set({
+                pixelCount: val, name: nm, x: Math.floor(Math.random()*4500), y: Math.floor(Math.random()*1500)
+            }).then(()=>{alert("Order Submitted! ID: "+id); window.location.href="index.html";});
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head><title>Order - THE 10 MILLION PIXELS</title>
+<style>body{text-align:center; padding:50px; background:#f4f4f4; font-family:sans-serif;} .card{border:1px solid #D4AF37; padding:30px; background:#fff; display:inline-block; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.1);}</style>
+</head>
+<body>
+    <div class="card">
+        <h2>Place Your Order</h2>
+        <p>Price: $0.05 per pixel</p>
+        <input type="number" id="amt" placeholder="Pixel Count (e.g. 10000)" style="width:250px; padding:10px;"><br><br>
+        <input type="text" id="name" placeholder="Brand Name" style="width:250px; padding:10px;"><br><br>
+        <button onclick="send()" style="padding:12px 30px; cursor:pointer; background:#cc0000; color:#fff; border:none; font-weight:bold; border-radius:5px;">SUBMIT ORDER</button>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script>
+        firebase.initializeApp({databaseURL: "https://the-10-million-pixels-plus-default-rtdb.firebaseio.com/"});
+        function send(){
+            const id = "ORD" + Date.now();
+            const val = document.getElementById('amt').value;
+            const nm = document.getElementById('name').value;
+            if(!val || !nm) return alert("Please fill all fields!");
+            firebase.database().ref('pending_orders/'+id).set({
+                pixelCount: val, name: nm, x: Math.floor(Math.random()*4500), y: Math.floor(Math.random()*1500)
+            }).then(()=>{alert("Order Submitted! ID: "+id); window.location.href="index.html";});
+        }
+    </script>
+</body>
+</html>
