@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head><title>Admin Control</title></head>
-<body style="background:#111; color:#fff; padding:30px; font-family:sans-serif;">
-    <div id="auth" style="text-align:center; margin-top:100px;">
-        <h2>🔒 Admin Login</h2>
-        <input type="password" id="pass" placeholder="Password" style="padding:10px;"> <button onclick="login()" style="padding:10px;">Enter</button>
+<body style="background:#000; color:#fff; padding:50px; font-family:sans-serif;">
+    <div id="auth" style="text-align:center;">
+        <h2>🔐 ADMIN ACCESS</h2>
+        <input type="password" id="pass" placeholder="Password" style="padding:10px;"> <button onclick="login()">LOGIN</button>
     </div>
     <div id="main" style="display:none;">
-        <h2>📋 Pending Orders</h2>
+        <h2 style="color:#FFD700">Pending Approvals</h2>
         <div id="list"></div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -19,13 +19,13 @@
         function load(){
             db.ref('pending_orders').on('value', s => {
                 const l = document.getElementById('list'); l.innerHTML = "";
-                const d = s.val(); if(!d) { l.innerHTML="No pending orders."; return; }
+                const d = s.val(); if(!d) return l.innerHTML="No orders.";
                 Object.keys(d).forEach(id => {
-                    l.innerHTML += `<div style="border:1px solid #D4AF37; padding:20px; margin:10px 0; background:#222;">
-                        ID: ${id} | Name: ${d[id].name} | Pixels: ${d[id].pixelCount}<br><br>
-                        <input type="text" id="img_${id}" placeholder="ImgBB Direct Link" style="width:100%; padding:8px;"><br>
-                        <input type="text" id="url_${id}" placeholder="Website URL" style="width:100%; padding:8px; margin-top:5px;"><br>
-                        <button onclick="app('${id}')" style="background:green; color:#fff; margin-top:10px; padding:10px; cursor:pointer; border:none;">APPROVE & PUBLISH</button>
+                    l.innerHTML += `<div style="border:1px solid #FFD700; padding:20px; margin-bottom:10px;">
+                        ${d[id].name} - ${d[id].pixelCount} Pixels<br>
+                        <input type="text" id="img_${id}" placeholder="Image Direct URL" style="width:300px; padding:5px;"><br>
+                        <input type="text" id="url_${id}" placeholder="Brand Website URL" style="width:300px; padding:5px; margin-top:5px;"><br>
+                        <button onclick="app('${id}')" style="background:green; color:#fff; padding:10px; margin-top:10px;">APPROVE & LIVE</button>
                     </div>`;
                 });
             });
@@ -33,11 +33,10 @@
         function app(id){
             const img = document.getElementById('img_'+id).value;
             const url = document.getElementById('url_'+id).value;
-            if(!img || !url) return alert("Fill both links!");
             db.ref('pending_orders/'+id).once('value', s => {
                 let data = s.val(); data.imageUrl = img; data.websiteUrl = url;
                 db.ref('pixels/'+id).set(data).then(()=>db.ref('pending_orders/'+id).remove());
-                alert("Published Successfully!");
+                alert("Live Now!");
             });
         }
     </script>
